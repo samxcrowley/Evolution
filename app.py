@@ -5,7 +5,6 @@
 import sys
 import pygame
 from grid import Grid
-from blip import Blip
 import drawing
 
 APP_WIDTH = 1280

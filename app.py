@@ -1,7 +1,3 @@
-#
-# app.py starts up the program and handles drawing
-#
-
 import sys
 import pygame
 from grid import Grid

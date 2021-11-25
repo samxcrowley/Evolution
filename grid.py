@@ -2,15 +2,17 @@
 # the Grid is the world in which the blips live, move, and evolve in
 #
 
-from blip import Blip, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_STAY
+from blip import Blip, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_STAY, create_offspring
 from random import random
 
 class Grid:
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, max_num_blips):
 
         self.width = width
         self.height = height
+
+        self.max_num_blips = max_num_blips
 
         self.grid = make_2d_array(self.width, self.height)
 
@@ -19,6 +21,31 @@ class Grid:
     def generate_birth(self, n):
         for i in range(n):
             self.birth_random_blip()
+
+
+    # all blips in the right side of the grid reproduce
+    def reproduce_blips(self):
+
+        # list of all blips in the right side
+        parents = []
+
+        # list of new blips produced by surviving parents
+        children = []
+
+        # add all blips who are on the right side to parents list
+        for x in range(int(self.width / 2), self.width):
+            for y in range(self.height):
+                if self.grid[x][y] != None:
+                    parents.append(self.grid[x][y])
+
+        # reset grid
+        self.grid = make_2d_array(self.width, self.height)
+
+        for n in range(self.max_num_blips):
+            children.append(self.birth_reproduced_blip(parents))
+
+        for c in children:
+            self.place_blip(c)
 
 
     # creates a new blip in a random unoccupied cell
@@ -32,6 +59,28 @@ class Grid:
             y = int(random() * self.height)
 
         self.grid[x][y] = Blip()
+
+
+    # takes a random pair of parents and returns an offspring of them
+    def birth_reproduced_blip(self, parents):
+        parent_one = parents[int(random() * len(parents))]
+        parent_two = parents[int(random() * len(parents))]
+
+        child = create_offspring(parent_one, parent_two)
+        return child
+    
+
+    # places blip in random unoccupied cell
+    def place_blip(self, blip):
+
+        x = int(random() * self.width)
+        y = int(random() * self.height)
+
+        while self.grid[x][y] != None:
+            x = int(random() * self.width)
+            y = int(random() * self.height)
+
+        self.grid[x][y] = blip
 
 
     # returns blip at (x, y)

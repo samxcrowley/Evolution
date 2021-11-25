@@ -1,4 +1,5 @@
 import sys
+import time
 import pygame
 from grid import Grid
 import drawing
@@ -32,14 +33,14 @@ pygame.init()
 screen = pygame.display.set_mode((APP_WIDTH, APP_HEIGHT))
 clock = pygame.time.Clock()
 
-grid = Grid(GRID_SIZE, GRID_SIZE)
+grid = Grid(GRID_SIZE, GRID_SIZE, max_num_blips)
 grid.generate_birth(max_num_blips)
 
 if __name__ == "__main__":
 
     while 1:
 
-        clock.tick(30)
+        clock.tick(60)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -72,9 +73,9 @@ if __name__ == "__main__":
             num_steps += 1
         else:
             if num_gens < max_num_gens:
+                time.sleep(1)
                 num_gens += 1
                 num_steps = 0
-                grid = Grid(GRID_SIZE, GRID_SIZE)
-                grid.generate_birth(max_num_blips)
+                grid.reproduce_blips()
 
         pygame.display.flip()
